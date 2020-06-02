@@ -26,7 +26,7 @@ import { Car, cars as cars_list } from './cars';
   app.get( "/persons/:name", 
     ( req: Request, res: Response ) => {
       let { name } = req.params;
-
+      
       if ( !name ) {
         return res.status(400)
                   .send(`name is required`);
@@ -70,11 +70,39 @@ import { Car, cars as cars_list } from './cars';
 
   // @TODO Add an endpoint to GET a list of cars
   // it should be filterable by make with a query paramater
+  app.get( "/cars/", ( req: Request, res: Response ) => {
+    let { cars } = req.query;
 
+    if ( !cars ) {
+      return res.status(200)
+                .send( cars_list);
+    }
+
+    return res.status(200)
+              .send(cars_list.filter(x => x.make == cars));
+  } );
   // @TODO Add an endpoint to get a specific car
   // it should require id
   // it should fail gracefully if no matching car is found
 
+  app.get( "/carsname/:name", 
+    ( req: Request, res: Response ) => {
+      let { name } = req.params;
+      
+      if (!name){
+        return res.status(400)
+        .send(`Id is required!`)
+      }
+      if ( !cars_list.find(x => x.id == name) ) {
+        return res.status(400)
+        .send(`There is no car with the id, ${name}!`);
+      }
+  
+      return res.status(200)
+                .send(cars_list.find(x => x.id == name) );
+  } );
+
+ 
   /// @TODO Add an endpoint to post a new car to our list
   // it should require id, type, model, and cost
 
